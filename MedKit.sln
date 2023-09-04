@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "top-medkit-server", "top-medkit-server\top-medkit-server.csproj", "{727CC0A3-C588-4509-B810-881964696D31}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "top-medkit-models", "top-medkit-models\top-medkit-models.csproj", "{47A3959A-FD03-440A-8285-E47D7676467D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "top-medkit-dblayer", "top-medkit-dblayer\top-medkit-dblayer.csproj", "{931015D7-1844-4AD9-BF5F-EF7DC425EECB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "top-medkit-manager-wpfclient", "top-medkit-manager-wpfclient\top-medkit-manager-wpfclient.csproj", "{3551AB3E-4F0D-49D9-A7A6-C6EBAA029B72}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{95803440-3CE3-4FEB-B213-EE1427CD7572}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{5D7C8A90-F835-486A-AB9C-847053D0C11B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{727CC0A3-C588-4509-B810-881964696D31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{727CC0A3-C588-4509-B810-881964696D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{727CC0A3-C588-4509-B810-881964696D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{727CC0A3-C588-4509-B810-881964696D31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47A3959A-FD03-440A-8285-E47D7676467D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47A3959A-FD03-440A-8285-E47D7676467D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47A3959A-FD03-440A-8285-E47D7676467D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47A3959A-FD03-440A-8285-E47D7676467D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{931015D7-1844-4AD9-BF5F-EF7DC425EECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{931015D7-1844-4AD9-BF5F-EF7DC425EECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{931015D7-1844-4AD9-BF5F-EF7DC425EECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{931015D7-1844-4AD9-BF5F-EF7DC425EECB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3551AB3E-4F0D-49D9-A7A6-C6EBAA029B72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3551AB3E-4F0D-49D9-A7A6-C6EBAA029B72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3551AB3E-4F0D-49D9-A7A6-C6EBAA029B72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3551AB3E-4F0D-49D9-A7A6-C6EBAA029B72}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{727CC0A3-C588-4509-B810-881964696D31} = {95803440-3CE3-4FEB-B213-EE1427CD7572}
+		{931015D7-1844-4AD9-BF5F-EF7DC425EECB} = {95803440-3CE3-4FEB-B213-EE1427CD7572}
+		{3551AB3E-4F0D-49D9-A7A6-C6EBAA029B72} = {5D7C8A90-F835-486A-AB9C-847053D0C11B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {44B2BDB9-A26F-42F4-BC2C-4A67509BD1C6}
+	EndGlobalSection
+EndGlobal
