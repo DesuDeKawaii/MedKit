@@ -38,7 +38,6 @@ namespace top_medkit_dblayer
 
             modelBuilder.Entity<MedKit>().HasMany(x => x.DrugInfos).WithMany(x => x.MedKits).UsingEntity(typeof(Drug));
             modelBuilder.Entity<Client>().HasMany(x => x.Drugs).WithMany(x => x.Clients).UsingEntity(typeof(Transaction));
-
         }
     }
 }

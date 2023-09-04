@@ -1,4 +1,5 @@
 {
   "drug_connectionString2": "Server=31.31.196.234;Database=u0588704_top_Drug2023;User Id=u0588704_top_Drug2023;Password=QwErD12!@;",
-  "drug_connectionString": "Server=.\\SQLEXPRESS;Database=MedKit;User Id=user;Password=qq;TrustServerCertificate=True;"
+  "drug_connectionString3": "Server=.\\SQLEXPRESS;Database=MedKit;User Id=user;Password=qq;TrustServerCertificate=True;",
+  "drug_connectionString": "Server=.\\SQLEXPRESS;Database=MedKit;Integrated Security=True;TrustServerCertificate=True;"
 }

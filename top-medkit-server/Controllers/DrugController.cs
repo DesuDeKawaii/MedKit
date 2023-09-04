@@ -28,6 +28,8 @@ namespace top_medkit_server.Controllers
                 })
             });
         }
+
+        [HttpGet("{id}")]
         public IActionResult GetDrugById(Guid id)
         {
             var potentialDrug = _db.GetDrugs().FirstOrDefault(x => x.Id == id);

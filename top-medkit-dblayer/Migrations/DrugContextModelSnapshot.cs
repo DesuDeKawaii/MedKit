@@ -25,6 +25,21 @@ namespace top_medkit_dblayer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ClientMedKit", b =>
+                {
+                    b.Property<Guid>("ClientsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MedKitsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ClientsId", "MedKitsId");
+
+                    b.HasIndex("MedKitsId");
+
+                    b.ToTable("ClientMedKit");
+                });
+
             modelBuilder.Entity("top_medkit_models.Models.AcceptanceMethod", b =>
                 {
                     b.Property<Guid>("Id")
@@ -57,9 +72,6 @@ namespace top_medkit_dblayer.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("MedKitId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -68,8 +80,6 @@ namespace top_medkit_dblayer.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MedKitId");
 
                     b.ToTable("Clients");
                 });
@@ -83,33 +93,18 @@ namespace top_medkit_dblayer.Migrations
                     b.Property<Guid>("AcceptanceMethodId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("ClientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("DrugInfoId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("MedKitId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Remainings")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("ShelfLife")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AcceptanceMethodId");
-
-                    b.HasIndex("ClientId");
 
                     b.HasIndex("DrugInfoId");
 
@@ -131,6 +126,10 @@ namespace top_medkit_dblayer.Migrations
                     b.Property<double>("Dosage")
                         .HasColumnType("float");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("DrugInfos");
@@ -141,6 +140,13 @@ namespace top_medkit_dblayer.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Desc")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -156,20 +162,18 @@ namespace top_medkit_dblayer.Migrations
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DrugId")
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("DrugInfoId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("SetOfPills")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TimeToTake")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("DrugId");
+                    b.HasIndex("DrugInfoId");
 
                     b.ToTable("Prescriptions");
                 });
@@ -189,18 +193,28 @@ namespace top_medkit_dblayer.Migrations
                     b.Property<Guid>("DrugId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MedKitId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
 
                     b.HasIndex("DrugId");
 
-                    b.HasIndex("MedKitId");
-
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("ClientMedKit", b =>
+                {
+                    b.HasOne("top_medkit_models.Models.Client", null)
+                        .WithMany()
+                        .HasForeignKey("ClientsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("top_medkit_models.Models.MedKit", null)
+                        .WithMany()
+                        .HasForeignKey("MedKitsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("top_medkit_models.Models.AcceptanceMethod", b =>
@@ -208,13 +222,6 @@ namespace top_medkit_dblayer.Migrations
                     b.HasOne("top_medkit_models.Models.DrugInfo", null)
                         .WithMany("AcceptanceMethod")
                         .HasForeignKey("DrugInfoId");
-                });
-
-            modelBuilder.Entity("top_medkit_models.Models.Client", b =>
-                {
-                    b.HasOne("top_medkit_models.Models.MedKit", null)
-                        .WithMany("Clients")
-                        .HasForeignKey("MedKitId");
                 });
 
             modelBuilder.Entity("top_medkit_models.Models.Drug", b =>
@@ -225,12 +232,8 @@ namespace top_medkit_dblayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("top_medkit_models.Models.Client", null)
-                        .WithMany("Drug")
-                        .HasForeignKey("ClientId");
-
                     b.HasOne("top_medkit_models.Models.DrugInfo", "DrugInfo")
-                        .WithMany()
+                        .WithMany("Drugs")
                         .HasForeignKey("DrugInfoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -251,65 +254,62 @@ namespace top_medkit_dblayer.Migrations
             modelBuilder.Entity("top_medkit_models.Models.Prescription", b =>
                 {
                     b.HasOne("top_medkit_models.Models.Client", "Client")
-                        .WithMany("Prescription")
+                        .WithMany("Prescriptions")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("top_medkit_models.Models.Drug", "Drug")
+                    b.HasOne("top_medkit_models.Models.DrugInfo", "DrugInfo")
                         .WithMany()
-                        .HasForeignKey("DrugId")
+                        .HasForeignKey("DrugInfoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");
 
-                    b.Navigation("Drug");
+                    b.Navigation("DrugInfo");
                 });
 
             modelBuilder.Entity("top_medkit_models.Models.Transaction", b =>
                 {
                     b.HasOne("top_medkit_models.Models.Client", "Client")
-                        .WithMany()
+                        .WithMany("Transactions")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("top_medkit_models.Models.Drug", "Drug")
-                        .WithMany()
+                        .WithMany("Transactions")
                         .HasForeignKey("DrugId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("top_medkit_models.Models.MedKit", "MedKit")
-                        .WithMany()
-                        .HasForeignKey("MedKitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");
 
                     b.Navigation("Drug");
-
-                    b.Navigation("MedKit");
                 });
 
             modelBuilder.Entity("top_medkit_models.Models.Client", b =>
                 {
-                    b.Navigation("Drug");
+                    b.Navigation("Prescriptions");
 
-                    b.Navigation("Prescription");
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("top_medkit_models.Models.Drug", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("top_medkit_models.Models.DrugInfo", b =>
                 {
                     b.Navigation("AcceptanceMethod");
+
+                    b.Navigation("Drugs");
                 });
 
             modelBuilder.Entity("top_medkit_models.Models.MedKit", b =>
                 {
-                    b.Navigation("Clients");
-
                     b.Navigation("Drugs");
                 });
 #pragma warning restore 612, 618

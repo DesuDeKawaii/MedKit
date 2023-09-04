@@ -12,10 +12,26 @@ namespace top_medkit_dblayer.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Clients",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false),
+                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Weight = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clients", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DrugInfos",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Dosage = table.Column<double>(type: "float", nullable: false),
                     Contraindications = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -28,7 +44,9 @@ namespace top_medkit_dblayer.Migrations
                 name: "MedKits",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Desc = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -54,24 +72,53 @@ namespace top_medkit_dblayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Clients",
+                name: "Prescriptions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Gender = table.Column<int>(type: "int", nullable: false),
-                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Weight = table.Column<double>(type: "float", nullable: false),
-                    MedKitId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DrugInfoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Clients", x => x.Id);
+                    table.PrimaryKey("PK_Prescriptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Clients_MedKits_MedKitId",
-                        column: x => x.MedKitId,
+                        name: "FK_Prescriptions_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Prescriptions_DrugInfos_DrugInfoId",
+                        column: x => x.DrugInfoId,
+                        principalTable: "DrugInfos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ClientMedKit",
+                columns: table => new
+                {
+                    ClientsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedKitsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClientMedKit", x => new { x.ClientsId, x.MedKitsId });
+                    table.ForeignKey(
+                        name: "FK_ClientMedKit_Clients_ClientsId",
+                        column: x => x.ClientsId,
+                        principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ClientMedKit_MedKits_MedKitsId",
+                        column: x => x.MedKitsId,
                         principalTable: "MedKits",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,14 +126,10 @@ namespace top_medkit_dblayer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ShelfLife = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DrugInfoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Amount = table.Column<int>(type: "int", nullable: false),
-                    Remainings = table.Column<double>(type: "float", nullable: false),
                     MedKitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AcceptanceMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    AcceptanceMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,11 +140,6 @@ namespace top_medkit_dblayer.Migrations
                         principalTable: "AcceptanceMethods",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Drugs_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Drugs_DrugInfos_DrugInfoId",
                         column: x => x.DrugInfoId,
@@ -117,40 +155,12 @@ namespace top_medkit_dblayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Prescriptions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DrugId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SetOfPills = table.Column<int>(type: "int", nullable: false),
-                    TimeToTake = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Prescriptions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Prescriptions_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Prescriptions_Drugs_DrugId",
-                        column: x => x.DrugId,
-                        principalTable: "Drugs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Transactions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DrugId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MedKitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Amount = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
@@ -168,12 +178,6 @@ namespace top_medkit_dblayer.Migrations
                         principalTable: "Drugs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Transactions_MedKits_MedKitId",
-                        column: x => x.MedKitId,
-                        principalTable: "MedKits",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -182,19 +186,14 @@ namespace top_medkit_dblayer.Migrations
                 column: "DrugInfoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clients_MedKitId",
-                table: "Clients",
-                column: "MedKitId");
+                name: "IX_ClientMedKit_MedKitsId",
+                table: "ClientMedKit",
+                column: "MedKitsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Drugs_AcceptanceMethodId",
                 table: "Drugs",
                 column: "AcceptanceMethodId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Drugs_ClientId",
-                table: "Drugs",
-                column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Drugs_DrugInfoId",
@@ -212,9 +211,9 @@ namespace top_medkit_dblayer.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Prescriptions_DrugId",
+                name: "IX_Prescriptions_DrugInfoId",
                 table: "Prescriptions",
-                column: "DrugId");
+                column: "DrugInfoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_ClientId",
@@ -225,21 +224,22 @@ namespace top_medkit_dblayer.Migrations
                 name: "IX_Transactions_DrugId",
                 table: "Transactions",
                 column: "DrugId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Transactions_MedKitId",
-                table: "Transactions",
-                column: "MedKitId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ClientMedKit");
+
+            migrationBuilder.DropTable(
                 name: "Prescriptions");
 
             migrationBuilder.DropTable(
                 name: "Transactions");
+
+            migrationBuilder.DropTable(
+                name: "Clients");
 
             migrationBuilder.DropTable(
                 name: "Drugs");
@@ -248,13 +248,10 @@ namespace top_medkit_dblayer.Migrations
                 name: "AcceptanceMethods");
 
             migrationBuilder.DropTable(
-                name: "Clients");
+                name: "MedKits");
 
             migrationBuilder.DropTable(
                 name: "DrugInfos");
-
-            migrationBuilder.DropTable(
-                name: "MedKits");
         }
     }
 }

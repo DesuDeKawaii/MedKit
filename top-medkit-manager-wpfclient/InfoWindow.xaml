@@ -4,18 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:top_medkit_manager_wpfclient"
-        mc:Ignorable="d"
+        mc:Ignorable="d" x:Name="This"
         Title="InfoWindow" Height="450" Width="1000">
     <Grid>
-        <StackPanel>
-            <DataGrid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="20">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header ="Name" Width="120"/>
-                    <DataGridTextColumn Header="Dosage" Width="200"/>
-                    <DataGridTextColumn Header="Contraindications" Width="350"/>
-                    <DataGridTextColumn Header="Acceptance Method" Width="200"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </StackPanel>
+        <DataGrid AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding DrugInfos, ElementName=This, Mode =OneWay}"
+                      Loaded="DataGrid_Loaded">
+            
+        </DataGrid>
+        
     </Grid>
 </Window>
